@@ -4,6 +4,8 @@ import matplotlib.image as mpimg
 import numpy as np
 import os
 import pickle
+import base64
+from io import BytesIO
 
 from network import Network
 
@@ -26,12 +28,38 @@ with open(MODEL_PATH, 'rb') as file:
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/api/predict")
+from flask import request, jsonify
+from PIL import Image
+import numpy as np
+import base64
+from io import BytesIO
+
+@app.route("/api/predict", methods=['POST'])
 def predict():
-    testImg = mpimg.imread('test.png')
-    testImg = np.array(testImg)
-    testImg = testImg.reshape(1, 784)
-    
-    prediction = model.predict(testImg)
-    
-    return jsonify({'prediction': int(prediction)})
+    try:
+        data = request.get_json()
+        base64img = data['image']
+        image_data = base64img.split(',')[1]
+        
+        img = Image.open(BytesIO(base64.b64decode(image_data)))
+        img = img.convert('L')
+        img = img.resize((28, 28), Image.Resampling.LANCZOS)
+        img_array = np.array(img)    
+            
+        img_array = 255 - img_array
+        img_array = img_array.astype(np.float32) / 255.0
+
+        img_array = img_array.flatten().reshape(1, 784)
+        print(img_array)
+        prediction = model.predict(img_array)
+        save_debug_image(img_array.reshape(28, 28))
+        
+        return jsonify({'prediction': int(prediction)})
+        
+    except Exception as e:
+        print(f"Error during prediction: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+def save_debug_image(img_array, filename="debug.png"):
+    img = Image.fromarray((img_array * 255).astype(np.uint8))
+    img.save(filename)
