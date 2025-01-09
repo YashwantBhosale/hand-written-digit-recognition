@@ -30,7 +30,7 @@ export default function Canvas({ digit, setDigit }: CanvasProps) {
 
 		ctx.beginPath();
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = 10;
+		ctx.lineWidth = 5;
 		ctx.lineCap = "round";
 		ctx.lineJoin = "round";
 		ctx.moveTo(lastX, lastY);
@@ -151,8 +151,8 @@ export default function Canvas({ digit, setDigit }: CanvasProps) {
 		<div>
 			<canvas
 				ref={canvas}
-				width="300px"
-				height="300px"
+				width="200px"
+				height="200px"
 				style={styles}
 				onMouseDown={(e: React.MouseEvent) => {
 					setIsDrawing(true);

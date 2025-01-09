@@ -6,6 +6,7 @@ import os
 import pickle
 import base64
 from io import BytesIO
+from PIL import Image
 
 from network import Network
 
@@ -18,6 +19,16 @@ class CustomUnpickler(pickle.Unpickler):
             module = "network"
         return super().find_class(module, name)
 
+def preprocess_image(image):
+    # here image argument should be 28x28 numpy array
+    normalized_image = (image / np.max(image)) * 255
+    normalized_image = normalized_image.astype(np.uint8)
+    
+    pil_image = Image.fromarray(normalized_image)
+    binary_image = pil_image.point(lambda p: 255 if p > 50 else p * 1.5)
+    
+    return np.array(binary_image)
+
 def custom_load(file):
     return CustomUnpickler(file).load()
 
@@ -28,11 +39,6 @@ with open(MODEL_PATH, 'rb') as file:
 def hello_world():
     return "<p>Hello, World!</p>"
 
-from flask import request, jsonify
-from PIL import Image
-import numpy as np
-import base64
-from io import BytesIO
 
 @app.route("/api/predict", methods=['POST'])
 def predict():
@@ -47,10 +53,10 @@ def predict():
         img_array = np.array(img)    
             
         img_array = 255 - img_array
+        img_array = preprocess_image(img_array)
         img_array = img_array.astype(np.float32) / 255.0
-
+        
         img_array = img_array.flatten().reshape(1, 784)
-        print(img_array)
         prediction = model.predict(img_array)
         save_debug_image(img_array.reshape(28, 28))
         
