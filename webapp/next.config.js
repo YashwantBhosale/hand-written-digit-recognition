@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const nextConfig = {
   rewrites: async () => {
     return [
@@ -10,6 +13,11 @@ const nextConfig = {
             : '/api/',
       },
     ]
+  },
+
+  webpack: (config) => {
+    config.plugins.push(new MiniCssExtractPlugin());
+    return config;
   },
 }
 

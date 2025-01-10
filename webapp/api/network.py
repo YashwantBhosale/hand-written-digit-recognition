@@ -145,4 +145,30 @@ class Network:
 
     def predict(self, x):
         return np.argmax(self.forward_prop(x.reshape(self.pixels, 1))[1][-1])
+    
+
+    def sigmoid(z):
+        return 1.0/(1.0+np.exp(-z))
+    
+    def feedforward_with_activations(self, x):
+        x = x.reshape(self.pixels, 1)
+        activations = [x]
+        
+        for i in range(len(self.layers) - 1):
+            z = np.dot(self.W[i], activations[-1]) + self.b[i]
+            
+            if i < len(self.layers) - 2:
+                activation = self.relu(z)
+            else:
+                activation = self.softmax(z)
+                
+            activations.append(activation)
+        
+        final_output = activations[-1]
+        prediction = np.argmax(final_output)
+        confidence = float(np.max(final_output))
+        
+        activations_list = [act.flatten().tolist() for act in activations]
+        
+        return prediction, confidence, activations_list
 

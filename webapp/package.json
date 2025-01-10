@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@hasma/react-drawing-board": "^0.5.50",
+    "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-tooltip": "^1.1.6",
     "@types/node": "20.1.4",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
@@ -34,6 +36,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@types/react": "^19.0.2"
+    "@types/react": "^19.0.2",
+    "mini-css-extract-plugin": "^2.9.2"
   }
 }

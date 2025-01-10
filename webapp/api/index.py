@@ -1,13 +1,10 @@
 from flask import Flask, request, jsonify
 import pickle
-import matplotlib.image as mpimg
 import numpy as np
 import os
-import pickle
 import base64
 from io import BytesIO
 from PIL import Image
-
 from network import Network
 
 app = Flask(__name__)
@@ -20,7 +17,6 @@ class CustomUnpickler(pickle.Unpickler):
         return super().find_class(module, name)
 
 def preprocess_image(image):
-    # here image argument should be 28x28 numpy array
     normalized_image = (image / np.max(image)) * 255
     normalized_image = normalized_image.astype(np.uint8)
     
@@ -34,11 +30,6 @@ def custom_load(file):
 
 with open(MODEL_PATH, 'rb') as file:
     model = custom_load(file)
-
-@app.route("/api/python")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
 
 @app.route("/api/predict", methods=['POST'])
 def predict():
@@ -56,16 +47,16 @@ def predict():
         img_array = preprocess_image(img_array)
         img_array = img_array.astype(np.float32) / 255.0
         
-        img_array = img_array.flatten().reshape(1, 784)
-        prediction = model.predict(img_array)
-        save_debug_image(img_array.reshape(28, 28))
+        img_array = img_array.flatten()
         
-        return jsonify({'prediction': int(prediction)})
+        prediction, confidence, activations = model.feedforward_with_activations(img_array)
+        
+        return jsonify({
+            'prediction': int(prediction),
+            'confidence': float(confidence),
+            'activations': activations
+        })
         
     except Exception as e:
         print(f"Error during prediction: {str(e)}")
         return jsonify({'error': str(e)}), 500
-
-def save_debug_image(img_array, filename="debug.png"):
-    img = Image.fromarray((img_array * 255).astype(np.uint8))
-    img.save(filename)
