@@ -60,3 +60,21 @@ def predict():
     except Exception as e:
         print(f"Error during prediction: {str(e)}")
         return jsonify({'error': str(e)}), 500
+    
+@app.route("/api/directpredict", methods=['POST'])
+def directPredict():
+    try:
+        data = request.get_json()
+        image_array = np.array(data['image']) # these are activations directly returned from the frontend
+        
+        prediction, confidence, activations = model.feedforward_with_activations(image_array)
+        
+        return jsonify({
+            'prediction': int(prediction),
+            'confidence': float(confidence),
+            'activations': activations
+        })
+        
+    except Exception as e:
+        print(f"Error during prediction: {str(e)}")
+        return jsonify({'error': str(e)}), 500
