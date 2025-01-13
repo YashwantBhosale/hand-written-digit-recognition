@@ -31,6 +31,10 @@ def custom_load(file):
 with open(MODEL_PATH, 'rb') as file:
     model = custom_load(file)
 
+@app.route("/api/", methods=['GET'])
+def index():
+    return "<h1> Hello World! </h1>"
+
 @app.route("/api/predict", methods=['POST'])
 def predict():
     try:
@@ -78,3 +82,6 @@ def directPredict():
     except Exception as e:
         print(f"Error during prediction: {str(e)}")
         return jsonify({'error': str(e)}), 500
+    
+if __name__ == '__main__':
+    app.run(debug=True)

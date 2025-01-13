@@ -3,8 +3,12 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ActivationGrid from "./ActivationGrid";
 
+
+
 // set for everything on page to be not draggable
-document.body.style.userSelect = "none";
+if (typeof document !== "undefined") {
+  document.body.style.userSelect = "none";
+}
 
 const GridCanvas = () => {
 	const [prediction, setPrediction] = useState<number | null>(null);

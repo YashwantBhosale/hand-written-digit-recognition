@@ -1,24 +1,15 @@
 /** @type {import('next').NextConfig} */
-
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const nextConfig = {
-  rewrites: async () => {
+  reactStrictMode: true,
+  output: 'standalone', // For Vercel deployment
+  async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination:
-          process.env.NODE_ENV === 'development'
-            ? 'http://127.0.0.1:5328/api/:path*'
-            : '/api/',
+        destination: '/api/:path*', // Proxy to serverless function for API
       },
-    ]
+    ];
   },
+};
 
-  webpack: (config) => {
-    config.plugins.push(new MiniCssExtractPlugin());
-    return config;
-  },
-}
-
-module.exports = nextConfig
+module.exports = nextConfig;
