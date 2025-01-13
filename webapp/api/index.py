@@ -31,6 +31,10 @@ def custom_load(file):
 with open(MODEL_PATH, 'rb') as file:
     model = custom_load(file)
 
+@app.route("/api/", methods=['GET'])
+def index():
+    return "<h1> Hello World! </h1>"
+
 @app.route("/api/predict", methods=['POST'])
 def predict():
     try:
@@ -60,3 +64,24 @@ def predict():
     except Exception as e:
         print(f"Error during prediction: {str(e)}")
         return jsonify({'error': str(e)}), 500
+    
+@app.route("/api/directpredict", methods=['POST'])
+def directPredict():
+    try:
+        data = request.get_json()
+        image_array = np.array(data['image']) # these are activations directly returned from the frontend
+        
+        prediction, confidence, activations = model.feedforward_with_activations(image_array)
+        
+        return jsonify({
+            'prediction': int(prediction),
+            'confidence': float(confidence),
+            'activations': activations
+        })
+        
+    except Exception as e:
+        print(f"Error during prediction: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+    
+if __name__ == '__main__':
+    app.run(debug=True)
