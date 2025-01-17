@@ -9,9 +9,11 @@
     }
   ],
   "compilerOptions": {
+    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   }
 }
