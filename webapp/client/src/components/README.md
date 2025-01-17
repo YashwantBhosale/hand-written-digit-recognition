@@ -74,9 +74,10 @@ Now, for each cell within radius:
 1. we calcuate its row and column by adding offsets. and we skip the cells that are outside the grid. (i mean obviously!)
 2. we calculate the distance of the cell from the pen's position. this is done using `pythagoras theorem` which is `Math.sqrt(rowDiff * rowDiff + colDiff * colDiff)`.
 3. then we calculate effect intensity. the intensity of the pens effect on each cell decreases as the distance increases.
-\[
-\text{effectIntensity} = \text{intensity} \times \left(1 - \frac{\text{distance}}{\text{radius} + 1}\right)
-\]
+
+```javascript
+const effectIntensity = intensity * (1 - distance / (radius + 1));
+```
 
 when `distance = 0`, the effect intensity is equal to the intensity of the pen. as the distance increases and approaches `radius + 1`, the effect intensity approaches 0.
 
@@ -90,4 +91,5 @@ newGrid[index] = Math.min(1, Math.max(newGrid[index], effectIntensity));
 ```
 
 **And that's it!** This is how the pen effect is applied to the grid. The grid is then used to render the canvas. 
-:heart: for reading this far!
+
+Thank ou for reading this far!
