@@ -158,7 +158,7 @@ const GridCanvas = () => {
 
 	const handleSubmit = async () => {
 		try {
-			const response = await fetch("/api/directpredict", {
+			const response = await fetch("https://hand-written-digit-recognition-ten.vercel.app/api/directpredict", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
