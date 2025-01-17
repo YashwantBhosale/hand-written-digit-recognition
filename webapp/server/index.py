@@ -34,9 +34,13 @@ def custom_load(file):
 with open(MODEL_PATH, 'rb') as file:
     model = custom_load(file)
 
+@app.route("/", methods=['GET'])
+def index():
+    return "<h1>Welcome to hand written digit recognition api!</h1>"
+
 @app.route("/api/", methods=['GET'])
 def index():
-    return "<h1> Hello World! </h1>"
+    return "<h1>Welcome to hand written digit recognition api!</h1>"
 
 @app.route("/api/predict", methods=['POST'])
 def predict():
