@@ -5,6 +5,7 @@
 **/.venv
 /.pnp
 .pnp.js
+**/myenv
 
 ./api/venv
 # testing

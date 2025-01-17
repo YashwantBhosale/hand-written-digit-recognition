@@ -9,10 +9,13 @@ if (typeof document !== "undefined") {
 }
 
 
+
 const GridCanvas = () => {
 	const [prediction, setPrediction] = useState<number | null>(null);
 	const [activations, setActivations] = useState<number[][]>([]);
 	const GRID_SIZE = 28;
+	const resultsRef = useRef<HTMLDivElement | null>(null);
+
 	let test = [
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -169,6 +172,9 @@ const GridCanvas = () => {
 			console.log(data);
 			setPrediction(data.prediction);
 			setActivations(data.activations);
+
+			resultsRef?.current?.scrollIntoView({ behavior: "smooth" });
+		
 		} catch (error) {
 			console.error("Error:", error);
 		}
@@ -223,14 +229,14 @@ const GridCanvas = () => {
 			</Card>
 
 			{prediction !== null && (
-				<div className="w-[60vw] mx-auto mt-6">
+				<div className="w-[60vw] mx-auto mt-6" ref ={resultsRef}>
 					<h2 className="text-xl font-bold mb-2">Prediction</h2>
 					<p className="text-lg text-blue-600">{prediction}</p>
 				</div>
 			)}
 
 			{activations?.length > 0 && (
-				<div className="w-full mb-10">
+				<div  className="w-full mb-10">
 					<h2 className="text-xl font-bold mb-4 w-[60%] mx-auto">Network Activations</h2>
 					{activations?.map((activation, index) => {
 						const isLastLayer = index === activations.length - 1;
