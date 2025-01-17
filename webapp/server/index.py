@@ -35,7 +35,7 @@ with open(MODEL_PATH, 'rb') as file:
     model = custom_load(file)
 
 @app.route("/", methods=['GET'])
-def index():
+def home():
     return "<h1>Welcome to hand written digit recognition api!</h1>"
 
 @app.route("/api/", methods=['GET'])
